@@ -20,3 +20,4 @@
 - [ ] remove old threads once a month
 - [x] mcp math tools
 - [x] amvera.yaml -> Dockerfile
+- [ ] (bug) apt "Network is unreachable"

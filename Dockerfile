@@ -8,6 +8,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     UV_LINK_MODE=copy
 
+# --- Форсируем IPv4 для apt ---
+# Без этой строки apt пытается идти по IPv6, который в сети Amvera недоступен.
+RUN echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
+
 # Минимальный набор системных утилит.
 # curl нужен для healthcheck, ca-certificates — для HTTPS-запросов
 # (NeuralDeep, MCP-серверы, скачивание колёс).
