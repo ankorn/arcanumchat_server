@@ -134,7 +134,7 @@ async def run_agent_streaming(websocket: WebSocket, question: str):
                 if mode == "messages":
                     chunk, metadata = data
 
-                    if "\"results\"" in chunk.content:
+                    if "\"results\"" in chunk.content: # hide from user raw seach result
                         continue
 
                     if chunk.content:
