@@ -199,8 +199,16 @@ async def run_agent_streaming(websocket: WebSocket, question: str, thread_id):
                 if mode == "messages":
                     chunk, metadata = data
 
-                    if "\"results\"" in chunk.content: # hide from user raw seach result
+                    if chunk.__class__.__name__ == "ToolMessage":
+                        await send_json(websocket, {
+                            "type": "tool_result",
+                            "name": getattr(chunk, "name", None),
+                            "content": chunk.content,
+                        })
                         continue
+
+                    # if "\"results\"" in chunk.content: # hide from user raw seach result
+                    #     continue
 
                     if chunk.content:
                         await send_json(
