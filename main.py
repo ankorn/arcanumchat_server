@@ -62,7 +62,6 @@ def _search_request(query: str) -> dict:
                 )
             return res.json()
         except Exception as exc:
-            last_exc = exc
             if attempt < RETRIES:
                 time.sleep(2 ** attempt)
 
