@@ -1,0 +1,20 @@
+- [x] check if langsmith deploy possible before commiting
+  - [x] pricing: deploy start from Plus plan, $39/mo
+  - [x] geo availability: uncertain
+- [ ] check deploy is Russia
+  - [ ] PaaS: Amvera Cloud
+  - [ ] VPS: Timeweb
+    - [ ] Docker + Docker Compose setup
+  - [x] choose model provider: https://neuraldeep.ru
+  - [x] choose model https://neuraldeep.ru/models/qwen3-8-27b
+- [ ] prompt
+  - [ ] specify query format
+  - [ ] response needs reference
+- [x] model and tool streaming
+- [ ] define search_arcanum return type, it is used by llm under the hood
+- [x] use ainvoke or astream, because server call
+- [ ] mcp math tools
+- [ ] short-term memory
+- [ ] structured output: answer + reference
+- [ ] make it possible to use chat more then for 1 message
+- [ ] format ##, ###, **: .md formatter?
