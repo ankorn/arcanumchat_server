@@ -13,7 +13,7 @@ from langgraph.config import get_stream_writer
 
 from pydantic import BaseModel
 import httpx
-
+import requests
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -38,33 +38,58 @@ API_URL = "https://mfphsrdubggjqxvyuzil.supabase.co/functions/v1/knn";
 API_KEY = "sb_publishable_XRNtK6CNXu6R2qOwelRE6w_SqIxMsVP";
 RETRIES = 2
 TIMEOUT = 30
-async def _search_request(query: str) -> dict:
-    """Arcanum search call with retry (async)."""
+def _search_request(query: str) -> dict:
+    """Arcanum search call with retry"""
     last_exc: Exception | None = None
 
-    async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-        for attempt in range(RETRIES + 1):
-            try:
-                res = await client.post(
-                    API_URL,
-                    headers={
-                        "Content-Type": "application/json",
-                        "apikey": API_KEY,
-                    },
-                    json={"query": query},
+    for attempt in range(RETRIES + 1):
+        try:
+            res = requests.post(
+                API_URL,
+                headers={
+                    "Content-Type": "application/json",
+                    "apikey": API_KEY,
+                },
+                data=json.dumps({"query": query}),
+                timeout=TIMEOUT,
+            )
+            if not res.ok:
+                raise RuntimeError(
+                    f"Search failed: {res.status_code} {res.reason}"
                 )
-                res.raise_for_status()
-                return res.json()
-            except Exception as exc:
-                last_exc = exc
-                if attempt < RETRIES:
-                    await asyncio.sleep(2 ** attempt)
+            return res.json()
+        except Exception as exc:
+            last_exc = exc
+            if attempt < RETRIES:
+                time.sleep(2 ** attempt)
 
-    raise last_exc
+# async def _search_request(query: str) -> dict:
+#     """Arcanum search call with retry (async)."""
+#     last_exc: Exception | None = None
+
+#     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+#         for attempt in range(RETRIES + 1):
+#             try:
+#                 res = await client.post(
+#                     API_URL,
+#                     headers={
+#                         "Content-Type": "application/json",
+#                         "apikey": API_KEY,
+#                     },
+#                     json={"query": query},
+#                 )
+#                 res.raise_for_status()
+#                 return res.json()
+#             except Exception as exc:
+#                 last_exc = exc
+#                 if attempt < RETRIES:
+#                     await asyncio.sleep(2 ** attempt)
+
+#     raise last_exc
 
 
 @tool
-async def search_arcanum(query: str) -> str:
+def search_arcanum(query: str) -> str:
     """Get 5 most relevant arcanum documents for the query"""
     runtime = get_runtime(RuntimeContext)
     writer = get_stream_writer()
@@ -72,7 +97,7 @@ async def search_arcanum(query: str) -> str:
     writer(f"Looking up relevant documents for query: {query}")
 
     try:
-        response = await runtime.context.search_arcanum(query)
+        response = runtime.context.search_arcanum(query)
 
         writer(f"Acquired relevant documents: {len(response["results"])}")
         for document in response["results"]:
