@@ -10,10 +10,13 @@ from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool
 from langgraph.runtime import get_runtime
 from langgraph.config import get_stream_writer
+from langgraph.checkpoint.memory import InMemorySaver
 
 from pydantic import BaseModel
 import requests
 import time
+import uuid
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -94,6 +97,7 @@ agent = create_agent(
         "use tool 'search_arcanum(query)'"
     ),
     context_schema=RuntimeContext,
+    checkpointer=InMemorySaver(),
 )
 
 
@@ -123,11 +127,20 @@ async def send_json(websocket: WebSocket, payload: dict):
 
 async def run_agent_streaming(websocket: WebSocket, question: str):
     """Запускает агента в режиме astream и стримит события в WebSocket."""
+
+    thread_id = websocket.query_params.get("thread_id")
+    if not thread_id:
+        thread_id = str(uuid.uuid4())
+        await websocket.send_json({"type": "thread_created", "thread_id": thread_id})
+
+    config = {"configurable": {"thread_id": thread_id}}
+
     max_retries = 3
     for attempt in range(max_retries):
         try:
             for mode, data in agent.stream(
                 {"messages": question},
+                config,
                 stream_mode=["messages", "custom"],
                 context=RuntimeContext(search_arcanum=_search_request),
             ):

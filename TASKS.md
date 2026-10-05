@@ -13,9 +13,17 @@
 - [x] model and tool streaming
 - [ ] define search_arcanum return type, it is used by llm under the hood
 - [x] use ainvoke or astream, because server call
-- [ ] mcp math tools
-- [ ] short-term memory
+- [x] short-term memory
 - [ ] structured output: answer + reference
 - [x] make it possible to use chat more then for 1 message
 - [ ] format ##, ###, **: .md formatter?
+- [ ] hide toolcall result properly, without "results" check
+
+---
+
+- [ ] mcp math tools
 - [ ] amvera.yaml -> Dockerfile
+
+---
+
+- [ ] handle reconnect on front-end, store thread_id in local storage(from event type 'thread_created') and pass to new ws: `wss://<домен>.amvera.io/ws?thread_id=${threadId}`
