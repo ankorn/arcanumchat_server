@@ -12,7 +12,6 @@ from langgraph.runtime import get_runtime
 from langgraph.config import get_stream_writer
 
 from pydantic import BaseModel
-import httpx
 import requests
 import time
 
@@ -63,30 +62,6 @@ def _search_request(query: str) -> dict:
             last_exc = exc
             if attempt < RETRIES:
                 time.sleep(2 ** attempt)
-
-# async def _search_request(query: str) -> dict:
-#     """Arcanum search call with retry (async)."""
-#     last_exc: Exception | None = None
-
-#     async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-#         for attempt in range(RETRIES + 1):
-#             try:
-#                 res = await client.post(
-#                     API_URL,
-#                     headers={
-#                         "Content-Type": "application/json",
-#                         "apikey": API_KEY,
-#                     },
-#                     json={"query": query},
-#                 )
-#                 res.raise_for_status()
-#                 return res.json()
-#             except Exception as exc:
-#                 last_exc = exc
-#                 if attempt < RETRIES:
-#                     await asyncio.sleep(2 ** attempt)
-
-#     raise last_exc
 
 
 @tool
