@@ -213,3 +213,18 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception:
         logger.exception("Unexpected WebSocket error")
         manager.disconnect(websocket)
+
+
+# from datetime import datetime, timedelta
+
+# # Храните время последней активности для каждого thread_id
+# thread_last_seen: dict[str, datetime] = {}
+
+# async def cleanup_old_threads():
+#     while True:
+#         await asyncio.sleep(3600)  # раз в час
+#         cutoff = datetime.now() - timedelta(days=7)
+#         for thread_id, last_seen in list(thread_last_seen.items()):
+#             if last_seen < cutoff:
+#                 checkpointer.delete_thread(thread_id)
+#                 del thread_last_seen[thread_id]

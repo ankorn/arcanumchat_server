@@ -28,5 +28,6 @@
 
 - [ ] mcp math tools
 - [ ] amvera.yaml -> Dockerfile
-
+- [ ] remove old threads once a month: cleanup_old_threads
+ - [ ] lru cache?
 ---
