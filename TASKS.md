@@ -17,10 +17,12 @@
 - [x] ~~structured output: answer + reference: not needed, stream writer instead~~
 - [x] make it possible to use chat more then for 1 message
 - [ ] hide toolcall result properly, without "results" check
+- [ ] remove old threads once a month
 
 ---
 
 #### front-end
+
 - [ ] format ##, ###, **: .md formatter?
 - [ ] handle reconnect on front-end, store thread_id in local storage(from event type 'thread_created') and pass to new ws: `wss://<домен>.amvera.io/ws?thread_id=${threadId}`
 
@@ -28,6 +30,5 @@
 
 - [ ] mcp math tools
 - [ ] amvera.yaml -> Dockerfile
-- [ ] remove old threads once a month: cleanup_old_threads
- - [ ] lru cache?
+
 ---

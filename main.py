@@ -11,11 +11,15 @@ from langchain_core.tools import tool
 from langgraph.runtime import get_runtime
 from langgraph.config import get_stream_writer
 from langgraph.checkpoint.memory import InMemorySaver
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
+from contextlib import asynccontextmanager
 from pydantic import BaseModel
 import requests
 import time
 import uuid
+from pathlib import Path
+import tempfile
 
 
 logging.basicConfig(level=logging.INFO)
@@ -24,6 +28,60 @@ logger = logging.getLogger(__name__)
 NEURALDEEP_API_KEY = os.environ.get("NEURALDEEP_API_KEY")
 if not NEURALDEEP_API_KEY:
     raise ValueError("NEURALDEEP_API_KEY environment variable is not set")
+
+
+# mcp_client = MultiServerMCPClient(
+#     {
+#         "math": {
+#             "transport": "stdio",
+#             "command": "uvx",
+#             "args": [
+#                 "--cache-dir",
+#                 str(Path(tempfile.gettempdir()) / "mcp-uv-cache"),
+#                 "mcp-server-calculator",
+#             ],
+#         },
+#     }
+# )
+
+# mcp_tools = await mcp_client.get_tools()
+
+agent = None
+mcp_client = None
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global agent, mcp_client
+
+    mcp_client = MultiServerMCPClient(
+        {
+            "math": {
+                "transport": "stdio",
+                "command": "uvx",
+                "args": [
+                    "--cache-dir",
+                    str(Path(tempfile.gettempdir()) / "mcp-uv-cache"),
+                    "mcp-server-calculator",
+                ],
+            },
+        }
+    )
+
+    mcp_tools = await mcp_client.get_tools()
+
+    agent = create_agent(
+        model=model,
+        tools=[search_arcanum, *mcp_tools],
+        system_prompt=(
+            "You are a helpful assistant specialized in the game "
+            "Arcanum of Steamworks and Magic Obscura. "
+            "If you are uncertain about the user query, "
+            "use tool 'search_arcanum(query)'"
+        ),
+        context_schema=RuntimeContext,
+        checkpointer=InMemorySaver(),
+    )
+
+    yield
 
 model = ChatOpenAI(
     model="qwen3.8-27b",
@@ -86,18 +144,18 @@ def search_arcanum(query: str) -> str:
         return f"Error: {e}"
 
 
-agent = create_agent(
-    model=model,
-    tools=[search_arcanum],
-    system_prompt=(
-        "You are a helpful assistant specialized in the game "
-        "Arcanum of Steamworks and Magic Obscura. "
-        "If you are uncertain about the user query, "
-        "use tool 'search_arcanum(query)'"
-    ),
-    context_schema=RuntimeContext,
-    checkpointer=InMemorySaver(),
-)
+# agent = create_agent(
+#     model=model,
+#     tools=[search_arcanum],
+#     system_prompt=(
+#         "You are a helpful assistant specialized in the game "
+#         "Arcanum of Steamworks and Magic Obscura. "
+#         "If you are uncertain about the user query, "
+#         "use tool 'search_arcanum(query)'"
+#     ),
+#     context_schema=RuntimeContext,
+#     checkpointer=InMemorySaver(),
+# )
 
 
 class ConnectionManager:
@@ -116,7 +174,7 @@ class ConnectionManager:
 
 
 manager = ConnectionManager()
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 async def send_json(websocket: WebSocket, payload: dict):
@@ -213,18 +271,3 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception:
         logger.exception("Unexpected WebSocket error")
         manager.disconnect(websocket)
-
-
-# from datetime import datetime, timedelta
-
-# # Храните время последней активности для каждого thread_id
-# thread_last_seen: dict[str, datetime] = {}
-
-# async def cleanup_old_threads():
-#     while True:
-#         await asyncio.sleep(3600)  # раз в час
-#         cutoff = datetime.now() - timedelta(days=7)
-#         for thread_id, last_seen in list(thread_last_seen.items()):
-#             if last_seen < cutoff:
-#                 checkpointer.delete_thread(thread_id)
-#                 del thread_last_seen[thread_id]
