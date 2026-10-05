@@ -190,7 +190,7 @@ async def run_agent_streaming(websocket: WebSocket, question: str, thread_id):
     max_retries = 3
     for attempt in range(max_retries):
         try:
-            async for mode, data in agent.stream(
+            async for mode, data in agent.astream(
                 {"messages": question},
                 config,
                 stream_mode=["messages", "custom"],
