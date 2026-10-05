@@ -1,16 +1,11 @@
 meta:
-  environment: python
+  environment: docker
   toolchain:
-    name: pip
-    version: "3.12"
+    name: docker
+
 build:
-  requirementsPath: requirements.txt
-  useCache: true
+  dockerfile: Dockerfile
+
 run:
-  scriptName: null
-  command: uvicorn main:app --host 0.0.0.0 --port 80
-  persistenceMount: /data
   containerPort: 80
-  russianTrustedCa: false
-  singleton: true
-  zeroDowntime: false
+  persistenceMount: /data
