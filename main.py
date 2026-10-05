@@ -125,13 +125,8 @@ async def send_json(websocket: WebSocket, payload: dict):
     await websocket.send_text(json.dumps(payload, ensure_ascii=False))
 
 
-async def run_agent_streaming(websocket: WebSocket, question: str):
+async def run_agent_streaming(websocket: WebSocket, question: str, thread_id):
     """Запускает агента в режиме astream и стримит события в WebSocket."""
-
-    thread_id = websocket.query_params.get("thread_id")
-    if not thread_id:
-        thread_id = str(uuid.uuid4())
-        await websocket.send_json({"type": "thread_created", "thread_id": thread_id})
 
     config = {"configurable": {"thread_id": thread_id}}
 
@@ -206,9 +201,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 await send_json(websocket, {"type": "error", "error": "Empty question"})
                 continue
 
-            await send_json(websocket, {"type": "start", "question": question})
+            thread_id = payload.get("thread_id", "")
+            if not thread_id:
+                thread_id = str(uuid.uuid4())
 
-            await run_agent_streaming(websocket, question)
+            await send_json(websocket, {"type": "start", "question": question, "thread_id": thread_id})
+
+            await run_agent_streaming(websocket, question, thread_id)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
