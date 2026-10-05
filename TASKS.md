@@ -16,7 +16,7 @@
 - [x] short-term memory
 - [x] ~~structured output: answer + reference: not needed, stream writer instead~~
 - [x] make it possible to use chat more then for 1 message
-- [ ] hide toolcall result properly, without "results" check
+- [x] hide toolcall result properly, without "results" check
 - [ ] remove old threads once a month
 
 ---
@@ -28,7 +28,7 @@
 
 ---
 
-- [ ] mcp math tools
+- [x] mcp math tools
 - [ ] amvera.yaml -> Dockerfile
 
 ---

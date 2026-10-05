@@ -29,23 +29,6 @@ NEURALDEEP_API_KEY = os.environ.get("NEURALDEEP_API_KEY")
 if not NEURALDEEP_API_KEY:
     raise ValueError("NEURALDEEP_API_KEY environment variable is not set")
 
-
-# mcp_client = MultiServerMCPClient(
-#     {
-#         "math": {
-#             "transport": "stdio",
-#             "command": "uvx",
-#             "args": [
-#                 "--cache-dir",
-#                 str(Path(tempfile.gettempdir()) / "mcp-uv-cache"),
-#                 "mcp-server-calculator",
-#             ],
-#         },
-#     }
-# )
-
-# mcp_tools = await mcp_client.get_tools()
-
 agent = None
 mcp_client = None
 @asynccontextmanager
@@ -143,21 +126,6 @@ def search_arcanum(query: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
-
-# agent = create_agent(
-#     model=model,
-#     tools=[search_arcanum],
-#     system_prompt=(
-#         "You are a helpful assistant specialized in the game "
-#         "Arcanum of Steamworks and Magic Obscura. "
-#         "If you are uncertain about the user query, "
-#         "use tool 'search_arcanum(query)'"
-#     ),
-#     context_schema=RuntimeContext,
-#     checkpointer=InMemorySaver(),
-# )
-
-
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -206,9 +174,6 @@ async def run_agent_streaming(websocket: WebSocket, question: str, thread_id):
                             "content": chunk.content,
                         })
                         continue
-
-                    # if "\"results\"" in chunk.content: # hide from user raw seach result
-                    #     continue
 
                     if chunk.content:
                         await send_json(
