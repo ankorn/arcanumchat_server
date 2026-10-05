@@ -33,7 +33,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # --- Пользователь без root ---
-# Немного безопасности: создаём непривилегированного пользователя.
+# В целях безопасности создаём непривилегированного пользователя.
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
 USER app
