@@ -120,7 +120,7 @@ def search_arcanum(query: str) -> str:
 
         writer(f"Acquired relevant documents: {len(response["results"])}")
         for document in response["results"]:
-          writer(f"<a href=\"{document["url"]}\">{document["title"]}</a>")
+          writer(f"<a href=\"{document["url"]}\" target=\"_blank\" rel=\"noopener noreferrer\">{document["title"]}</a>")
 
         return response
     except Exception as e:
