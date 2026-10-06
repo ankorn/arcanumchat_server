@@ -24,6 +24,6 @@
 
 ---
 
-- [ ] measure latency/tokens of agent; add reranker; report diff
+- [ ] measure latency/tokens of agent/total latency; add reranker; report diff
 
 ---
