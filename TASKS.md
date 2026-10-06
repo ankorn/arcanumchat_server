@@ -21,3 +21,9 @@
 - [x] mcp math tools
 - [x] amvera.yaml -> Dockerfile
 - [ ] (bug) apt "Network is unreachable"
+
+---
+
+- [ ] measure latency of agent; add reranker; report diff
+
+---
