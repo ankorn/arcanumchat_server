@@ -20,7 +20,8 @@
 - [ ] remove old threads once a month
 - [x] mcp math tools
 - [x] amvera.yaml -> Dockerfile
-- [ ] (bug) apt "Network is unreachable"
+- [x] (bug) apt "Network is unreachable"
+- [ ] (bug) amvera incident with moscow_0 region, recreate app in warshaw region
 
 ---
 

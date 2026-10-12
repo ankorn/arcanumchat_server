@@ -25,9 +25,9 @@ import tempfile
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-NEURALDEEP_API_KEY = os.environ.get("NEURALDEEP_API_KEY")
-if not NEURALDEEP_API_KEY:
-    raise ValueError("NEURALDEEP_API_KEY environment variable is not set")
+NEURALDEEP_API_KEY_2 = os.environ.get("NEURALDEEP_API_KEY_2")
+if not NEURALDEEP_API_KEY_2:
+    raise ValueError("NEURALDEEP_API_KEY_2 environment variable is not set")
 
 agent = None
 mcp_client = None
@@ -66,11 +66,9 @@ async def lifespan(app: FastAPI):
 
     yield
 
-logger.warning('>>> ' + NEURALDEEP_API_KEY)
-
 model = ChatOpenAI(
     model="qwen3.8-27b",
-    openai_api_key=NEURALDEEP_API_KEY,
+    openai_api_key=NEURALDEEP_API_KEY_2,
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
