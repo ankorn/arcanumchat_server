@@ -118,7 +118,7 @@ def search_arcanum(query: str) -> str:
     try:
         response = runtime.context.search_arcanum(query)
 
-        writer(f"Acquired relevant documents: {len(response["results"])}")
+        writer("Acquired relevant documents:")
         for document in response["results"]:
           writer(f"<a href=\"{document["url"]}\" target=\"_blank\" rel=\"noopener noreferrer\">{document["title"]}</a>")
 
