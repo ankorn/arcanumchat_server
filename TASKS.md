@@ -22,6 +22,7 @@
 - [x] amvera.yaml -> Dockerfile
 - [x] (bug) apt "Network is unreachable"
 - [x] (bug) amvera incident(https://status.yandex.cloud/ru/timeline?status=opened) with moscow_0 region, recreate app in warshaw region
+- [x] (bug) neuraldeep changed free tier access, qwen3.6-35b-a3b is no nonger available; use qwen3.6-35b-a3b
 
 ---
 
