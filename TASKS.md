@@ -21,7 +21,7 @@
 - [x] mcp math tools
 - [x] amvera.yaml -> Dockerfile
 - [x] (bug) apt "Network is unreachable"
-- [ ] (bug) amvera incident(https://status.yandex.cloud/ru/timeline?status=opened) with moscow_0 region, recreate app in warshaw region
+- [x] (bug) amvera incident(https://status.yandex.cloud/ru/timeline?status=opened) with moscow_0 region, recreate app in warshaw region
 
 ---
 

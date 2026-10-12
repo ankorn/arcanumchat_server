@@ -68,7 +68,7 @@ async def lifespan(app: FastAPI):
 
 model = ChatOpenAI(
     model="qwen3.8-27b",
-    openai_api_key="sk-2w7hJXtQKj6KHJ-J9eoYUg", # NEURALDEEP_API_KEY_2,
+    openai_api_key=NEURALDEEP_API_KEY_2,
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
