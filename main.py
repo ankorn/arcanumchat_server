@@ -66,6 +66,8 @@ async def lifespan(app: FastAPI):
 
     yield
 
+logger.warning('>>> ' + NEURALDEEP_API_KEY)
+
 model = ChatOpenAI(
     model="qwen3.8-27b",
     openai_api_key=NEURALDEEP_API_KEY,
