@@ -24,7 +24,6 @@ from uvicorn.protocols.utils import ClientDisconnected
 
 from _search_request import _search_request
 
-logging.getLogger("openai").setLevel(logging.DEBUG)
 logging.getLogger("httpx").setLevel(logging.INFO)
 
 NEURALDEEP_API_KEY_2 = os.environ.get("NEURALDEEP_API_KEY_2")
@@ -39,26 +38,21 @@ logger = logging.getLogger(__name__)
 
 TIMEOUT = 60
 
+_timeout = httpx.Timeout(connect=10.0, read=300.0, write=30.0, pool=10.0)
+_limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
+
 model = ChatOpenAI(
     model="qwen3.6-35b-a3b",
     openai_api_key=NEURALDEEP_API_KEY_2,
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
-    http_client=httpx.Client(
-        timeout=httpx.Timeout(
-            connect=10.0,
-            read=300.0,
-            write=30.0,
-            pool=10.0,
-        ),
-        limits=httpx.Limits(
-            max_keepalive_connections=20,
-            max_connections=100,
-        ),
-    ),
+    http_client=httpx.Client(timeout=_timeout, limits=_limits),
+    http_async_client=httpx.AsyncClient(timeout=_timeout, limits=_limits),
     max_retries=3,
 )
+
+logger.info("model.http_async_client" + model.http_async_client)
 
 agent = None
 http_client: httpx.AsyncClient | None = None
