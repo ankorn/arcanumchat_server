@@ -52,8 +52,6 @@ model = ChatOpenAI(
     max_retries=3,
 )
 
-logger.info("model.http_async_client" + model.http_async_client)
-
 agent = None
 http_client: httpx.AsyncClient | None = None
 
