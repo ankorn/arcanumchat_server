@@ -7,3 +7,4 @@ langchain-core==1.6.6
 pydantic==2.12.5
 uv==0.12.23
 langchain_mcp_adapters==0.3.2
+httpx
