@@ -45,8 +45,19 @@ model = ChatOpenAI(
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
-    timeout=60.0,
-    max_retries=2,
+    http_client=httpx.Client(
+        timeout=httpx.Timeout(
+            connect=10.0,
+            read=300.0,
+            write=30.0,
+            pool=10.0,
+        ),
+        limits=httpx.Limits(
+            max_keepalive_connections=20,
+            max_connections=100,
+        ),
+    ),
+    max_retries=3,
 )
 
 agent = None
