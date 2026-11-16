@@ -24,6 +24,9 @@ from uvicorn.protocols.utils import ClientDisconnected
 
 from _search_request import _search_request
 
+logging.getLogger("openai").setLevel(logging.DEBUG)
+logging.getLogger("httpx").setLevel(logging.INFO)
+
 NEURALDEEP_API_KEY_2 = os.environ.get("NEURALDEEP_API_KEY_2")
 if not NEURALDEEP_API_KEY_2:
     raise ValueError("NEURALDEEP_API_KEY_2 environment variable is not set")
@@ -37,11 +40,13 @@ logger = logging.getLogger(__name__)
 TIMEOUT = 60
 
 model = ChatOpenAI(
-    model="qwen3.6-fp8-noreason",
+    model="qwen3.6-35b-a3b",
     openai_api_key=NEURALDEEP_API_KEY_2,
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
+    timeout=300.0,
+    max_retries=1,
 )
 
 agent = None
