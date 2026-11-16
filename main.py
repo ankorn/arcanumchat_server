@@ -47,6 +47,7 @@ model = ChatOpenAI(
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
+    timeout=60.0,
     # http_client=httpx.Client(timeout=_timeout, limits=_limits),
     # http_async_client=httpx.AsyncClient(timeout=_timeout, limits=_limits),
     max_retries=3,
