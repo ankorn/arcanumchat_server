@@ -30,3 +30,23 @@
 - [ ] measure latency/tokens of agent/total latency; add reranker; report diff
 
 ---
+
+16/11/26 17:58:53
+2026-11-16 13:58:53,459 INFO main: first token after 10.64s
+
+16/11/26 18:00:57
+2026-11-16 14:00:57,408 INFO main: first token after 9.26s
+
+16/11/26 18:04:15
+2026-11-16 14:04:15,706 INFO main: first token after 19.09s
+
+16/11/26 18:07:35
+2026-11-16 14:07:35,587 INFO main: first token after 14.47s
+
+16/11/26 18:08:54
+2026-11-16 14:08:54,852 INFO main: first token after 8.59s
+
+2026-11-16 14:09:25,087 INFO main: first token after 10.50s
+
+16/11/26 18:12:09
+2026-11-16 14:12:09,961 INFO main: first token after 8.36s
