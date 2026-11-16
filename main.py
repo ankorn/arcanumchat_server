@@ -48,7 +48,7 @@ agent = None
 http_client: httpx.AsyncClient | None = None
 
 class RuntimeContext(BaseModel):
-    _search_request: Any = None
+    search_request: Any = None
 
 @tool
 async def search_arcanum(query: str) -> str:
@@ -60,7 +60,7 @@ async def search_arcanum(query: str) -> str:
 
     t0 = time.monotonic()
     try:
-        response = await runtime.context._search_request(query, http_client, logger)
+        response = await runtime.context.search_request(query, http_client, logger)
         elapsed = time.monotonic() - t0
         logger.info("tool search_arcanum ok in %.2fs", elapsed)
 
@@ -168,7 +168,7 @@ async def run_agent_streaming(websocket: WebSocket, question: str, thread_id: st
                 {"messages": question},
                 config,
                 stream_mode=["messages", "custom"],
-                context=RuntimeContext(_search_request=_search_request),
+                context=RuntimeContext(search_request=_search_request),
             ):
                 if mode == "messages":
                     chunk, metadata = data
