@@ -45,8 +45,8 @@ model = ChatOpenAI(
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
-    timeout=300.0,
-    max_retries=1,
+    timeout=60.0,
+    max_retries=2,
 )
 
 agent = None
