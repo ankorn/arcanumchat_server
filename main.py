@@ -70,7 +70,7 @@ model = ChatOpenAI(
     temperature=0.0,
     streaming=True,
 
-    request_timeout=httpx.Timeout(connect=10.0, read=300.0, write=30.0, pool=10.0),
+    request_timeout=_timeout,
     http_client=httpx.Client(timeout=_timeout, limits=_limits),
     http_async_client=httpx.AsyncClient(timeout=_timeout, limits=_limits),
     max_retries=3,
