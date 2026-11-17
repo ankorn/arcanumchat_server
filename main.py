@@ -54,7 +54,7 @@ model = ChatOpenAI(
 )
 
 logger.info("http_async_client timeout: %s", model.http_async_client.timeout)
-logger.info("http_async_client limits: %s", model.http_async_client._limits)
+logger.info("http_async_client limits: %s", model.http_async_client.limits)
 
 agent = None
 http_client: httpx.AsyncClient | None = None
