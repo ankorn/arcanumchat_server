@@ -39,24 +39,24 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-# DNS
-for i in range(5):
-    t0 = time.monotonic()
-    try:
-        socket.getaddrinfo("api.neuraldeep.ru", 443)
-        logger.info("DNS OK in %.2fs", time.monotonic() - t0)
-    except Exception as e:
-        logger.error("DNS FAIL in %.2fs: %s", time.monotonic() - t0, e)
+# # DNS
+# for i in range(5):
+#     t0 = time.monotonic()
+#     try:
+#         socket.getaddrinfo("api.neuraldeep.ru", 443)
+#         logger.info("DNS OK in %.2fs", time.monotonic() - t0)
+#     except Exception as e:
+#         logger.error("DNS FAIL in %.2fs: %s", time.monotonic() - t0, e)
 
-# TCP
-for i in range(5):
-    t0 = time.monotonic()
-    try:
-        s = socket.create_connection(("api.neuraldeep.ru", 443), timeout=15)
-        s.close()
-        logger.info("TCP OK in %.2fs", time.monotonic() - t0)
-    except Exception as e:
-        logger.error("TCP FAIL in %.2fs: %s", time.monotonic() - t0, e)
+# # TCP
+# for i in range(5):
+#     t0 = time.monotonic()
+#     try:
+#         s = socket.create_connection(("api.neuraldeep.ru", 443), timeout=15)
+#         s.close()
+#         logger.info("TCP OK in %.2fs", time.monotonic() - t0)
+#     except Exception as e:
+#         logger.error("TCP FAIL in %.2fs: %s", time.monotonic() - t0, e)
 
 TIMEOUT = 60
 
@@ -69,6 +69,8 @@ model = ChatOpenAI(
     openai_api_base="https://api.neuraldeep.ru/v1",
     temperature=0.0,
     streaming=True,
+
+    request_timeout=httpx.Timeout(connect=10.0, read=300.0, write=30.0, pool=10.0),
     http_client=httpx.Client(timeout=_timeout, limits=_limits),
     http_async_client=httpx.AsyncClient(timeout=_timeout, limits=_limits),
     max_retries=3,
