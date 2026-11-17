@@ -24,6 +24,7 @@ from uvicorn.protocols.utils import ClientDisconnected
 
 from _search_request import _search_request
 
+logging.getLogger("openai").setLevel(logging.DEBUG)
 logging.getLogger("httpx").setLevel(logging.INFO)
 
 NEURALDEEP_API_KEY_2 = os.environ.get("NEURALDEEP_API_KEY_2")
