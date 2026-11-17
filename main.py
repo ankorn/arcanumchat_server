@@ -21,6 +21,7 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.tools import load_mcp_tools
 from pydantic import BaseModel
 from uvicorn.protocols.utils import ClientDisconnected
+import socket
 
 from _search_request import _search_request
 
@@ -35,7 +36,27 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(name)s: %(message)s",
 )
+
 logger = logging.getLogger(__name__)
+
+# DNS
+for i in range(5):
+    t0 = time.monotonic()
+    try:
+        socket.getaddrinfo("api.neuraldeep.ru", 443)
+        logger.info("DNS OK in %.2fs", time.monotonic() - t0)
+    except Exception as e:
+        logger.error("DNS FAIL in %.2fs: %s", time.monotonic() - t0, e)
+
+# TCP
+for i in range(5):
+    t0 = time.monotonic()
+    try:
+        s = socket.create_connection(("api.neuraldeep.ru", 443), timeout=15)
+        s.close()
+        logger.info("TCP OK in %.2fs", time.monotonic() - t0)
+    except Exception as e:
+        logger.error("TCP FAIL in %.2fs: %s", time.monotonic() - t0, e)
 
 TIMEOUT = 60
 
@@ -54,7 +75,6 @@ model = ChatOpenAI(
 )
 
 logger.info("http_async_client timeout: %s", model.http_async_client.timeout)
-logger.info("http_async_client limits: %s", model.http_async_client.limits)
 
 agent = None
 http_client: httpx.AsyncClient | None = None
