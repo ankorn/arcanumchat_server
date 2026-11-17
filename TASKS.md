@@ -23,7 +23,7 @@
 - [x] (bug) apt "Network is unreachable"
 - [x] (bug) amvera incident(https://status.yandex.cloud/ru/timeline?status=opened) with moscow_0 region, recreate app in warshaw region
 - [x] (bug) neuraldeep changed free tier access, qwen3-8-27b-noreason is no nonger available; use qwen3.6-35b-a3b-noreason
-- [x] (bug) 1-2 минуты подключения к neuraldeep
+- [x] (bug) 1-2 minutes before ConnectionError: handled connection timout
 
 ---
 

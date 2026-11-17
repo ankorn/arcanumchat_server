@@ -21,11 +21,10 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.tools import load_mcp_tools
 from pydantic import BaseModel
 from uvicorn.protocols.utils import ClientDisconnected
-import socket
 
 from _search_request import _search_request
 
-logging.getLogger("openai").setLevel(logging.DEBUG)
+# logging.getLogger("openai").setLevel(logging.DEBUG)
 logging.getLogger("httpx").setLevel(logging.INFO)
 
 NEURALDEEP_API_KEY_2 = os.environ.get("NEURALDEEP_API_KEY_2")
@@ -38,25 +37,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-# # DNS
-# for i in range(5):
-#     t0 = time.monotonic()
-#     try:
-#         socket.getaddrinfo("api.neuraldeep.ru", 443)
-#         logger.info("DNS OK in %.2fs", time.monotonic() - t0)
-#     except Exception as e:
-#         logger.error("DNS FAIL in %.2fs: %s", time.monotonic() - t0, e)
-
-# # TCP
-# for i in range(5):
-#     t0 = time.monotonic()
-#     try:
-#         s = socket.create_connection(("api.neuraldeep.ru", 443), timeout=15)
-#         s.close()
-#         logger.info("TCP OK in %.2fs", time.monotonic() - t0)
-#     except Exception as e:
-#         logger.error("TCP FAIL in %.2fs: %s", time.monotonic() - t0, e)
 
 TIMEOUT = 60
 
@@ -76,13 +56,7 @@ model = ChatOpenAI(
     max_retries=3,
 )
 
-logger.info("outer client: %s", model.http_async_client)
-logger.info("http_async_client timeout: %s", model.http_async_client.timeout)
-
-inner = model.async_client._client
-logger.info("inner client: %s", inner)
-logger.info("inner timeout: %s", getattr(inner, "timeout", None))
-logger.info("inner is outer: %s", inner is model.http_async_client)
+# logger.info("inner timeout: %s", getattr(model.async_client._client, "timeout", None))
 
 agent = None
 http_client: httpx.AsyncClient | None = None
