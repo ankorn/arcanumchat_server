@@ -74,7 +74,13 @@ model = ChatOpenAI(
     max_retries=3,
 )
 
+logger.info("outer client: %s", model.http_async_client)
 logger.info("http_async_client timeout: %s", model.http_async_client.timeout)
+
+inner = model.async_client._client
+logger.info("inner client: %s", inner)
+logger.info("inner timeout: %s", getattr(inner, "timeout", None))
+logger.info("inner is outer: %s", inner is model.http_async_client)
 
 agent = None
 http_client: httpx.AsyncClient | None = None
